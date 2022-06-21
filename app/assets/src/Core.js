@@ -1,13 +1,14 @@
 const client = ZAFClient.init();
 
 let ticket_id;
-
+let requester_id
 
 
 const getInfoTicket = async () => {
   try {
     const result = await client.get('ticket')
     ticket_id = result.ticket.id
+    requester_id = result.ticket.requester.id
   } catch (e) {
     console.log(`Error request ${e}`);
   }
@@ -48,11 +49,42 @@ const searchCEP = async () => {
       loading.style.display = "none";
     });
 };
+const getTickets = async () => {
+  const button = document.getElementById("button-tickets");
+  const loading = document.getElementById("loading");
+  try {
+    button.style.display = "none";
+    loading.style.display = "block";
 
+    const result = await client.request(`/api/v2/users/${requester_id}/tickets/requested`)
+    const tickets = result.tickets
+    const list = tickets.map(function (ticket) {
+      return `
+      <li>
+        <div style="border: 1px solid #04363c;">
+          <b>Título:</b> ${ticket.subject} <br>
+          <b>Status:</b> ${ticket.status} <br>
+          <b>Data:</b> ${ticket.created_at} <br>
+        </div>
+      </li>
+
+      `;
+    })
+
+    document.getElementById('list-tickets').innerHTML = list;
+    loading.style.display = "none";
+
+  } catch (e) {
+    const error = '<li>Não foi possível buscar os tickets</li>'
+    console.log(`Error request ${e}`);
+    loading.style.display = "none";
+    document.getElementById('list-tickets').innerHTML = error;
+  }
+}
 const Core = {
   searchCEP,
   getInfoTicket,
-
+  getTickets
 };
 
 export default Core;

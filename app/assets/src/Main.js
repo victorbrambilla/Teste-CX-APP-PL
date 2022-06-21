@@ -9,6 +9,7 @@ client.metadata().then((metadata) => {
 
 client.on('app.registered', function(e) {
  document.getElementById("button-cep").addEventListener("click", Core.searchCEP);
+  document.getElementById("button-tickets").addEventListener("click", Core.getTickets);
 });
 
 const Main = async () => {
@@ -19,8 +20,14 @@ const Main = async () => {
 
     <section>
       <input name="cep" id="input-cep" type="text" maxlength="8" placeholder="CEP"/>
-      <button id="button-cep">Inserir CEP</button>
+      <button id="button-cep"  style="background-color: 04363c;color: white; padding: 1px; border-radius: 5px;">Inserir CEP</button>
 
+    </section>
+
+    <section>
+      <h2 style="color: #ff00000; font-weight: 500; color: #04363c; font-size: 1rem; text-align: center; margin-top:20px">Últimos tickets</h2>
+      <button id="button-tickets" style="background-color: 04363c;color: white; padding: 1px; border-radius: 5px;">Buscar</button>
+      <ul id="list-tickets"></ul>
     </section>
 
     <p style="display:none; text-align: center;" id="loading">Carregando...</p>
