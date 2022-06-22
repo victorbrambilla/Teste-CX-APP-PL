@@ -17,7 +17,15 @@ const getInfoTicket = async () => {
 const searchCEP = async () => {
     const cep = document.getElementById("input-cep").value;
     const button = document.getElementById("button-cep");
+    const errorCep= document.querySelector(".section-cep #error");
+    const successCep= document.querySelector(".section-cep #success");
     const loading = document.getElementById("loading");
+
+    successCep.style.display = "none";
+    if(cep.length !== 8){
+      errorCep.style.display = "block";
+      return errorCep.innerHTML = `<p style="color: #ff00000; font-weight: 500; color: red; font-size: 1rem;">CEP inválido!</p>`;
+    }
     button.disabled = true;
     loading.style.display = "block";
     const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
@@ -41,12 +49,17 @@ const searchCEP = async () => {
       data: JSON.stringify(body),
       secure: true
     }).then(function (data) {
+      successCep.style.display = "block";
+      successCep.innerHTML = `<p style="color: #ff00000; font-weight: 500; color: green; font-size: 1rem; ">Ticket atualizado com sucesso!</p>`;
       console.log("Ticket atualizado com sucesso");
+
     }).catch(function (e) {
       console.log(`Erro: ${e}`);
+      loading.style.display = "none";
     }).finally(function () {
       button.disabled = false;
       loading.style.display = "none";
+      errorCep.style.display = "none";
     });
 };
 const getTickets = async () => {
